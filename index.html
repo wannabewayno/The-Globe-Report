@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Globe Report</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="./assets/images/favicons/globe-icon.png" >
+    <link rel="apple-touch-icon" href="./assets/images/favicons/globe-icon.png">
+    <link rel="icon" href="./assets/images/favicons/globe-icon.png">
+    <!-- BootStrap CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+    <!-- Font Awesome CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="./assets/css/light-theme.css" id="css-id">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark d-flex justify-content-center">
+        <h1 class="navbar-brand ">The Globe Report</h1>  
+    </nav>
+    <main>
+        <div class="container mt-3">
+            <div class="row">
+                <!-- side bar -->
+                <div class="col-3" id="side-bar">
+                    <form class="form-inline d-flex justify-content-center md-form form-sm mt-0">
+                        <input class="form-control form-control-sm mr-2 w-75" type="text" placeholder="Search" aria-label="Search" id="search-bar">
+                        <i class="fa fa-search" aria-hidden="true" data-toggle="tooltip"
+                        data-placement="right" title="press enter to search"></i>
+                    </form>
+                    <ul class="list-group" id="saved-searches">
+                     
+                    </ul>
+                </div>
+                <!-- main content -->
+                <div class="col-9">
+                    <!-- current weather -->
+                    <div class="row" id="current-weather">
+                        <div class="col-12">
+                            <p>Temperature<span id="temperature"></span></p>
+                            <p>Humidity<span id="humidity"></span></p>
+                            <p>Wind speed<span id="wind-speed"></span></p>
+                            <p>UV index<span id="uv-index"  data-toggle="tooltip"
+                                data-placement="right" title="wear sunscreen today!">10</span></p>
+                        </div>
+                    </div>
+                    <!-- forecast -->
+                    <div class="row" id="forecast">
+                        <div class="col-12">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <!-- BootStrap and Popper .js files -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <!-- Moment.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <!-- Custom Js -->
+    <script src="./assets/javascript/ajax-engine.js"></script>
+</body>
+</html>
