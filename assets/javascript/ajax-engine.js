@@ -128,8 +128,8 @@ function toggleClearAllButton(){
    
     $('#weather-header').html(unambiguousCity+" - "+partOfDay);
     $('#condition').text(AJAXresponse.weather[0].description);
-    $('#temperature').text(AJAXresponse.main.temp +" °C");
-    $('#humidity').text(AJAXresponse.main.humidity+" %");
+    $('#temperature').text(AJAXresponse.main.temp +"°C");
+    $('#humidity').text(AJAXresponse.main.humidity+"%");
     $('#wind-speed').text(getWind(AJAXresponse));
     $('#rain').text("0 mm");
     $('#condition-icon').attr("src", getImgSrc(AJAXresponse));
@@ -209,10 +209,12 @@ function toggleClearAllButton(){
 
   // is called upon when a successfull ajax response of dataType "Forecast" occurs
   function updateForecast(AJAXresponse){
+    console.log(AJAXresponse);
     $('.forecast-card').remove();
     const UTCoffset = (AJAXresponse.timezone)/60;
     targetTime = localCityTime(AJAXresponse);
     for (let i = 5; i < 35; i+=6) {
+      console.log(AJAXresponse.list[i].dt_txt);
       const card = forecastCard(AJAXresponse.list[i],UTCoffset);
       $("#forecast").append(card);
     }
@@ -220,7 +222,8 @@ function toggleClearAllButton(){
   }
 
   function forecastCard(forecastObject,UTCoffset){
-    const forecastTime = moment.utc(forecastObject["dt_text"])
+    console.log(forecastObject.dt_txt);
+    const forecastTime = moment.utc(forecastObject["dt_txt"])
     const forecastDay = forecastTime.utcOffset(UTCoffset).format("ddd, hA");
     console.log(forecastDay);
     const title = forecastDay;
@@ -237,7 +240,7 @@ function toggleClearAllButton(){
     const statSection = $('<ul>').addClass("forecast-stat-section")
     const temp = $('<li>').text("Temperature: "+forecastObject.main.temp + "°C");
     const wind = $('<li>').text("Wind: "+getWind(forecastObject));
-    const humidity = $('<li>').text("humidity: "+forecastObject.main.humidity+" %");
+    const humidity = $('<li>').text("humidity: "+forecastObject.main.humidity+"%");
 
     conditionSection.append(picture, condition);
     statSection.append(temp,wind,humidity);

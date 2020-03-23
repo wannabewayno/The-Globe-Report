@@ -36,6 +36,15 @@ body {
 .forecast-label-5-day{
     font-weight: bold;
 }
+p {
+    font-weight: bold;
+}
+span{
+    border-radius: 5px;
+    padding:5px;
+    background-color:rgba(112, 128, 144, 0.6) ;
+}
+
 
 /* -------------- Forecast cards ------------------------*/
 
