@@ -113,8 +113,9 @@ function toggleClearAllButton(){
     });
   }
 
-  function error(textStatus){
-    alert("whoops,"+textStatus);
+  function error(){
+    $("#search-bar").popover({container:'body', trigger:'focus',toggle:"popover", placement:"top", content:"Whoops!, something went wrong. Try again aaaand possibly check the spelling?"});
+    $("#search-bar").popover('show');
   }
 
   // is called upon when a successfull ajax response of dataType "currentWeather" occurs
@@ -212,8 +213,14 @@ function toggleClearAllButton(){
     console.log(AJAXresponse);
     $('.forecast-card').remove();
     const UTCoffset = (AJAXresponse.timezone)/60;
+    const usersTime = moment.utc();
+    const cityLocalTime = usersTime.utcOffset(UTCoffset);
+    const cityLocalTimeClone = cityLocalTime.clone();
+    const startForecastTime = cityLocalTimeClone.add(1,"days");
+    console.log(cityLocalTime.format("ddd, hA"));
+    console.log(startForecastTime.format("ddd, hA")); 
     const firstForecastTime = moment.utc(AJAXresponse.list[0].dt_txt);
-    const firstForecastDay = firstForecastTime.utcOffset(UTCoffset).format("ddd, hA");
+    const firstForecastDay = firstForecastTime.utcOffset(UTCoffset).format("e, hA");
     const offsetForecastTime = firstForecastTime.utcOffset(UTCoffset);
     const timeClone = offsetForecastTime.clone();
     const nextDay = timeClone.add(1,"days");
@@ -369,3 +376,21 @@ function removeButton(buttonToBeRemoved){
   buttonToBeRemoved.remove(); // then removes the button itself
   toggleClearAllButton();//checks to see if we need a clear all button
 }
+
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
