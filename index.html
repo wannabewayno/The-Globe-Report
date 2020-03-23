@@ -20,17 +20,19 @@
         <h1 class="navbar-brand ">The Globe Report</h1>  
     </nav>
     <main>
-        <div class="container mt-3">
+        <div class="container mt-3 mx-5">
             <div class="row">
                 <!-- side bar -->
                 <div class="col-3" id="side-bar">
                     <form class="form-inline d-flex justify-content-center md-form form-sm mt-0">
-                        <input class="form-control form-control-sm mr-2 w-75" type="text" placeholder="Search" aria-label="Search" id="search-bar">
+                        <input class="form-control form-control-sm mr-2 w-75" type="text" placeholder="Search a city!" aria-label="Search" id="search-bar">
                         <i class="fa fa-search" aria-hidden="true" data-toggle="tooltip"
                         data-placement="right" title="press enter to search"></i>
                     </form>
-                    <ul class="list-group" id="saved-searches">
-                     
+                    <ul class="list-group mt-4" id="saved-searches">
+                        <li class="clear-all-list hide">
+                            <button class="btn btn-secondary clear-all" id="clear-all">Clear All Cities</button>
+                        </li>
                     </ul>
                 </div>
                 <!-- main content -->
@@ -38,11 +40,25 @@
                     <!-- current weather -->
                     <div class="row" id="current-weather">
                         <div class="col-12">
-                            <p>Temperature<span id="temperature"></span></p>
-                            <p>Humidity<span id="humidity"></span></p>
-                            <p>Wind speed<span id="wind-speed"></span></p>
-                            <p>UV index<span id="uv-index"  data-toggle="tooltip"
-                                data-placement="right" title="wear sunscreen today!">10</span></p>
+                            <div class="row" >
+                                <div class="col-12">
+                                    <h2 id="weather-header"></h2>
+                                    <p class="lead">Last Updated:</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <p>Temperature: <span id="temperature"></span></p>
+                                    <p>Humidity: <span id="humidity"></span></p>
+                                    <p>Wind speed: <span id="wind-speed"></span></p>
+                                    <p>Rain:<span id="rain"></span></p>
+                                    <p>UV index: <span id="uv-index"></span></p>
+                                </div>
+                                <div class="col-6">
+                                    <img src="./assets/images/favicons/globe-icon.png" alt="weather-condition" class="img-fluid" id="condition-icon">
+                                    <h5 id="condition"></h5>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- forecast -->
@@ -64,6 +80,8 @@
     <!-- Moment.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <!-- Custom Js -->
+    <script src="./assets/javascript/windLookUpTable.js"></script>
     <script src="./assets/javascript/ajax-engine.js"></script>
 </body>
 </html>
+<!--  -->

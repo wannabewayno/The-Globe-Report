@@ -7,3 +7,16 @@ body {
     border-radius: 15px;
     padding:15px;
 }
+
+#uv-index{
+    background-color:transparent;
+}
+
+.clear-all-list{
+    margin-top: 10px;
+    text-align: center;
+    list-style-type: none;
+}
+.hide{
+    display: none;
+}
