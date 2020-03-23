@@ -25,6 +25,7 @@ var savedSearches = retrieveLocalStorage(); //city list of previous searches
   $('#clear-all').click(function(){ // when the clear-all button is pressed
     $('.cityButton').remove(); // remove anything that has the class "cityButton" (i.e all the cityButtons)
     wipeLocalStorage(); //also wipes local storage
+    toggleClearAllButton();//checks to see if we need a clear all button
   })
   
   // triggers search function when the user hits enter
@@ -123,9 +124,9 @@ function toggleClearAllButton(){
     const country = AJAXresponse.sys.country
     const unambiguousCity = cityName+","+country;
     addToLocalStorage(unambiguousCity);
-    const day =  moment().format("dddd");
-    const partOfDay = findTimeOfDay();
-    $('#weather-header').html(unambiguousCity+" - "+day+partOfDay);
+    const partOfDay = findTimeOfDay(AJAXresponse);
+   
+    $('#weather-header').html(unambiguousCity+" - "+partOfDay);
     $('#condition').text(AJAXresponse.weather[0].description);
     $('#temperature').text(AJAXresponse.main.temp +" °C");
     $('#humidity').text(AJAXresponse.main.humidity+" %");
@@ -160,32 +161,86 @@ function toggleClearAllButton(){
       const upperLimit = windLookUpTable[compassDirections].upperLimit;
       if (windDegrees>lowerLimit && windDegrees < upperLimit){
         return compassDirections
-      }
+      } 
+    }
+    if (windDegrees>lowerLimit || windDegrees < upperLimit){
+      return compassDirections;
     }
   }
 
+  function localCityTime(AJAXresponse){
+    const localTime = moment.utc();
+    const targetTimeZone = (AJAXresponse.timezone)/60;
+    const targetTime = localTime.utcOffset(targetTimeZone);
+    return targetTime;
+  }
+
   // finds the time of day and returns it with an icon.
-  function findTimeOfDay(){
-    const hour = moment().hour();
+  function findTimeOfDay(AJAXresponse){
+    const targetTime = localCityTime(AJAXresponse);
+    const dayOfWeek = targetTime.format("dddd");
+    const hour = targetTime.hour();
     
+    $("#local-time").text("Local time: "+targetTime.format("hA"));
+
+    $("#icon").removeClass(); // removes current class to add more.
     if(hour > 4 && hour < 12){
-        return " morning"+" <i class=\"fas fa-coffee\"></i>";
+      $("#icon").addClass("fa fa-coffee");
+        return (dayOfWeek+" morning");
     } 
+
     if(hour > 12 && hour < 17){
-        return " afternoon"+" <i class=\"fas fa-sun\"></i>";
+      $("#icon").addClass("fa fa-sun");
+        return (dayOfWeek+" afternoon");
     } 
+   
     if(hour > 17 && hour < 21){
-        return " evening"+" <i class=\"fas fa-moon\"></i>";
+      $("#icon").addClass("fa fa-moon");
+        return (dayOfWeek+" evening");
     } 
+    
     if(hour > 21 || hour < 5){
-        return " night"+" <i class=\"fas fa-star\"></i>";
+      $("#icon").addClass("fa fa-star");
+        return (dayOfWeek+" night");
     } 
   }
 
   // is called upon when a successfull ajax response of dataType "Forecast" occurs
   function updateForecast(AJAXresponse){
-    console.log(AJAXresponse);
+    $('.forecast-card').remove();
+    const UTCoffset = (AJAXresponse.timezone)/60;
+    targetTime = localCityTime(AJAXresponse);
+    for (let i = 5; i < AJAXresponse.list.length; i+=6) {
+      const card = forecastCard(AJAXresponse.list[i],UTCoffset);
+      $("#forecast").append(card);
+    }
+   
+  }
 
+  function forecastCard(forecastObject,UTCoffset){
+    const forecastTime = moment.utc(forecastObject["dt_text"])
+    const forecastDay = forecastTime.utcOffset(UTCoffset).format("ddd, hA");
+    console.log(forecastDay);
+    const title = forecastDay;
+
+    const card = $('<div>').addClass("forecast-card");
+    const cardTitle = $('<h5>').addClass("forecast-title");
+    cardTitle.text(title)
+
+    const conditionSection = $('<div>').addClass("forecast-condition-section")
+    const condition = $('<h5>').addClass("forcast-condition");
+    condition.text(forecastObject.weather[0].description)
+    const picture = $('<img>').attr("src",getImgSrc(forecastObject));
+
+    const statSection = $('<ul>').addClass("forecast-stat-section")
+    const temp = $('<li>').text("Temperature: "+forecastObject.main.temp + "°C");
+    const wind = $('<li>').text("Wind: "+getWind(forecastObject));
+    const humidity = $('<li>').text("humidity: "+forecastObject.main.humidity+" %");
+
+    conditionSection.append(picture, condition);
+    statSection.append(temp,wind,humidity);
+    card.append(cardTitle, conditionSection, statSection);
+    return card;
   }
 
   function getUVIndex(AJAXresponse){
