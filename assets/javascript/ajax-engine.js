@@ -163,6 +163,8 @@ function toggleClearAllButton(){
         return compassDirections
       } 
     }
+    const lowerLimit = windLookUpTable[compassDirections].lowerLimit;
+    const upperLimit = windLookUpTable[compassDirections].upperLimit;
     if (windDegrees>lowerLimit || windDegrees < upperLimit){
       return compassDirections;
     }
@@ -183,24 +185,24 @@ function toggleClearAllButton(){
     
     $("#local-time").text("Local time: "+targetTime.format("hA"));
 
-    $("#icon").removeClass(); // removes current class to add more.
-    if(hour > 4 && hour < 12){
-      $("#icon").addClass("fa fa-coffee");
+    $("#icon").removeClass(); // removes current icon.
+    if(hour > 4 && hour < 13){
+      $("#icon").addClass("fa fa-coffee"); //adds coffee icon
         return (dayOfWeek+" morning");
     } 
-
-    if(hour > 12 && hour < 17){
-      $("#icon").addClass("fa fa-sun");
+    
+    if(hour > 12 && hour < 18){
+      $("#icon").addClass("fa fa-sun"); //adds sun icon
         return (dayOfWeek+" afternoon");
     } 
-   
-    if(hour > 17 && hour < 21){
-      $("#icon").addClass("fa fa-moon");
+    
+    if(hour > 17 && hour < 22){
+      $("#icon").addClass("fa fa-moon"); // adds moon icon
         return (dayOfWeek+" evening");
     } 
     
     if(hour > 21 || hour < 5){
-      $("#icon").addClass("fa fa-star");
+      $("#icon").addClass("fa fa-star"); // star icon
         return (dayOfWeek+" night");
     } 
   }
