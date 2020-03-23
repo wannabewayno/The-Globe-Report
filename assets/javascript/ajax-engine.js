@@ -210,7 +210,7 @@ function toggleClearAllButton(){
     $('.forecast-card').remove();
     const UTCoffset = (AJAXresponse.timezone)/60;
     targetTime = localCityTime(AJAXresponse);
-    for (let i = 5; i < AJAXresponse.list.length; i+=6) {
+    for (let i = 5; i < 35; i+=6) {
       const card = forecastCard(AJAXresponse.list[i],UTCoffset);
       $("#forecast").append(card);
     }
@@ -224,11 +224,11 @@ function toggleClearAllButton(){
     const title = forecastDay;
 
     const card = $('<div>').addClass("forecast-card");
-    const cardTitle = $('<h5>').addClass("forecast-title");
+    const cardTitle = $('<h6>').addClass("forecast-title");
     cardTitle.text(title)
 
     const conditionSection = $('<div>').addClass("forecast-condition-section")
-    const condition = $('<h5>').addClass("forcast-condition");
+    const condition = $('<h6>').addClass("forcast-condition");
     condition.text(forecastObject.weather[0].description)
     const picture = $('<img>').attr("src",getImgSrc(forecastObject));
 
@@ -341,7 +341,7 @@ function toggleClearAllButton(){
     // first removes any toggled state already present in the sidebar
   function addButton(cityName){
     toggleActive();
-    cityButton = $('<li>').addClass("active list-group-item d-flex justify-content-around align-items-baseline cityButton");
+    cityButton = $('<li>').addClass("active list-group-item d-flex justify-content-around align-items-baseline cityButton btn");
     cityText = $('<p>').text(cityName);
     cityText.addClass("cityButton");
     closeButton = $('<i>').addClass("fa fa-window-close");
