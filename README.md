@@ -23,9 +23,8 @@ Right, it's pretty intuitve; but in the interest if being clear, here's how you 
 Anytime you search for a city, it will show up in the side bar so you can check it later.
 They're saved to your browser so no need to type it again.
 
-if the search bar is getting cluttered, you can remove them at anytime by clicking on the cross next to it. If you're feeling impulsiv, hit the clear all button and see what happens.
+if the search bar is getting cluttered, you can remove them at anytime by clicking on the cross next to it. If you're feeling impulsive, hit the clear all button and see what happens.
 
 I think that's it. 
 Enjoy!
 
-simply by typing it into the search bar and hitting enter.
