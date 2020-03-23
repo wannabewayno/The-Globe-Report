@@ -29,7 +29,7 @@ var savedSearches = retrieveLocalStorage(); //city list of previous searches
   
   // triggers search function when the user hits enter
   $('#search-bar').on('keypress',function(event) {
-    if(event.which == 13) {
+    if(event.which === 13) {
         event.preventDefault();
         const searchBar = $(event.target);
         searchQuery = searchBar.val();
