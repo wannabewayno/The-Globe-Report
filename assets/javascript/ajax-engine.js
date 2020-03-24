@@ -213,22 +213,29 @@ function toggleClearAllButton(){
     console.log(AJAXresponse);
     $('.forecast-card').remove();
     const UTCoffset = (AJAXresponse.timezone)/60;
-    const usersTime = moment.utc();
-    const cityLocalTime = usersTime.utcOffset(UTCoffset);
-    const cityLocalTimeClone = cityLocalTime.clone();
-    const startForecastTime = cityLocalTimeClone.add(1,"days");
-    console.log(cityLocalTime.format("ddd, hA"));
-    console.log(startForecastTime.format("ddd, hA")); 
-    const firstForecastTime = moment.utc(AJAXresponse.list[0].dt_txt);
-    const firstForecastDay = firstForecastTime.utcOffset(UTCoffset).format("e, hA");
-    const offsetForecastTime = firstForecastTime.utcOffset(UTCoffset);
-    const timeClone = offsetForecastTime.clone();
-    const nextDay = timeClone.add(1,"days");
-    console.log(firstForecastDay);
-    console.log(nextDay.format("ddd, hA"));
-    
-    for (let i = 5; i < 35; i+=6) {
-      console.log(AJAXresponse.list[i].dt_txt);
+    const usersTime = moment();
+    const citiesTime = usersTime.utcOffset(UTCoffset);
+    const clonedTime = citiesTime.clone();
+    const citiesHour = clonedTime.hour();
+    const hourDifference = 24 - citiesHour;
+    const setHours = 12+hourDifference;
+    const forecastStart = clonedTime.add(setHours,"h");
+    const hourCriteria = forecastStart.hour();
+    const dayCriteria = forecastStart.day();
+    var startingIndex;
+    for (let i = 0; i < AJAXresponse.list.length; i++) {
+      timeCheck = moment(AJAXresponse.list[i].dt_txt);
+      checkHour = timeCheck.hour();
+      checkDay = timeCheck.day();
+      if (checkHour === hourCriteria && checkDay === dayCriteria){
+        console.log(AJAXresponse.list[i]);
+        console.log(i);
+        console.log(moment(AJAXresponse.list[i]).format("ddd, hA"));
+       startingIndex = i
+      }
+    }
+
+    for (let i = startingIndex; i <  AJAXresponse.list.length; i+=8) {
       const card = forecastCard(AJAXresponse.list[i],UTCoffset);
       $("#forecast").append(card);
     }
@@ -236,10 +243,8 @@ function toggleClearAllButton(){
   }
 
   function forecastCard(forecastObject,UTCoffset){
-    console.log(forecastObject.dt_txt);
-    const forecastTime = moment.utc(forecastObject["dt_txt"])
-    const forecastDay = forecastTime.utcOffset(UTCoffset).format("ddd, hA");
-    console.log(forecastDay);
+    const forecastTime = moment(forecastObject.dt_txt);
+    const forecastDay = forecastTime.format('ddd, hA');
     const title = forecastDay;
 
     const card = $('<div>').addClass("forecast-card");
