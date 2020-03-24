@@ -1,9 +1,10 @@
 
 //--------------------GlobalVariables-----------------------------
 var savedSearches = retrieveLocalStorage(); //city list of previous searches
- 
+$('#data-labels').hide();
 
 //----------------------------event triggers--------------------
+  // hide data labels on start up 
 
   //listens for any button in the sidebar getting pressed
   $('#side-bar').click(function(event){
@@ -98,6 +99,8 @@ function toggleClearAllButton(){
       type: 'GET',
     })
     .done(function (data){ // call this function if a successful request is made
+      $('#data-labels').show();
+      $('#condition-label').addClass("condition-label");
       if (dataType === "currentWeather"){
         updateCurrentWeather(data); // if successful request is the currentWeather
       }
@@ -120,7 +123,6 @@ function toggleClearAllButton(){
 
   // is called upon when a successfull ajax response of dataType "currentWeather" occurs
   function updateCurrentWeather(AJAXresponse){
-    console.log(AJAXresponse);
     const cityName = AJAXresponse.name
     const country = AJAXresponse.sys.country
     const unambiguousCity = cityName+","+country;
@@ -130,6 +132,7 @@ function toggleClearAllButton(){
     $('#weather-header').html(unambiguousCity+" - "+partOfDay);
     $('#condition').text(AJAXresponse.weather[0].description);
     $('#temperature').text(AJAXresponse.main.temp +"°C");
+    $('#feels-like').text(AJAXresponse.main.feels_like +"°C");
     $('#humidity').text(AJAXresponse.main.humidity+"%");
     $('#wind-speed').text(getWind(AJAXresponse));
     $('#rain').text("0 mm");
@@ -139,7 +142,6 @@ function toggleClearAllButton(){
 
   function getImgSrc(AJAXresponse){
     const iconID = AJAXresponse.weather[0].icon;
-    console.log(iconID);
     const base = "https://openweathermap.org/img/wn/";
     const suffix = "@2x.png";
     const source = base+iconID+suffix;
@@ -193,7 +195,7 @@ function toggleClearAllButton(){
     } 
     
     if(hour > 12 && hour < 18){
-      $("#icon").addClass("fa fa-sun"); //adds sun icon
+      $("#icon").addClass("fas fa-sun"); //adds sun icon
         return (dayOfWeek+" afternoon");
     } 
     
@@ -210,7 +212,6 @@ function toggleClearAllButton(){
 
   // is called upon when a successfull ajax response of dataType "Forecast" occurs
   function updateForecast(AJAXresponse){
-    console.log(AJAXresponse);
     $('.forecast-card').remove();
     const UTCoffset = (AJAXresponse.timezone)/60;
     const usersTime = moment();
@@ -222,30 +223,31 @@ function toggleClearAllButton(){
     const forecastStart = clonedTime.add(setHours,"h");
     const hourCriteria = forecastStart.hour();
     const dayCriteria = forecastStart.day();
+    // most of the above code could be simplified, but it was late and moment.js was frustrating me.
+
     var startingIndex;
     for (let i = 0; i < AJAXresponse.list.length; i++) {
       timeCheck = moment(AJAXresponse.list[i].dt_txt);
       checkHour = timeCheck.hour();
       checkDay = timeCheck.day();
       if (checkHour === hourCriteria && checkDay === dayCriteria){
-        console.log(AJAXresponse.list[i]);
-        console.log(i);
-        console.log(moment(AJAXresponse.list[i]).format("ddd, hA"));
        startingIndex = i
       }
     }
-
+    var count = 0;
     for (let i = startingIndex; i <  AJAXresponse.list.length; i+=8) {
       const card = forecastCard(AJAXresponse.list[i],UTCoffset);
       $("#forecast").append(card);
+      count++;
     }
+    $('#forecast-number').text(count+" - Day Forecast")
    
   }
-
-  function forecastCard(forecastObject,UTCoffset){
+  // creates all mark up for the dynamic forecast content. and returns the card as a JQuery Object
+  function forecastCard(forecastObject){
     const forecastTime = moment(forecastObject.dt_txt);
     const forecastDay = forecastTime.format('ddd, hA');
-    const title = forecastDay;
+    const title = forecastDay; //updates day dynamically 
 
     const card = $('<div>').addClass("forecast-card");
     const cardTitle = $('<h6>').addClass("forecast-title");
@@ -288,7 +290,6 @@ function toggleClearAllButton(){
 
   // is called upon when a successfull ajax response of dataType "UVindex" occurs
   function updateUVindex(AJAXresponse){
-    console.log(AJAXresponse);
     const UVindex = AJAXresponse.value;
     $('#uv-index').tooltip('dispose'); //clears previous tool-tip
     //adds an appropritate background colour and tool-tip message to the UV index number.
@@ -300,7 +301,7 @@ function toggleClearAllButton(){
       $('#uv-index').css("background-color" ,"yellow");
       $('#uv-index').tooltip({placement:"right",title:"moderate exposure, wear protective clothing"});
     }
-    if(UVindex > 5 && UVindex < 7){
+    if(UVindex > 5 && UVindex < 8){
       $('#uv-index').css("background-color" ,"orange");
       $('#uv-index').tooltip({placement:"right",title:"high exposure apply sunscreen every 2-hours"});
     }
