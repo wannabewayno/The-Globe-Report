@@ -1,10 +1,18 @@
 
 //--------------------GlobalVariables-----------------------------
 var savedSearches = retrieveLocalStorage(); //city list of previous searches
-$('#data-labels').hide();
+
 
 //----------------------------event triggers--------------------
-  // hide data labels on start up 
+$('#data-labels').hide();// hide data labels on start up 
+
+  $('body').on('click',function(){
+    $("#search-bar").popover('hide')
+  });
+  // enables Bootstrap tool-tips
+  $(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+  });
 
   //listens for any button in the sidebar getting pressed
   $('#side-bar').click(function(event){
@@ -111,8 +119,8 @@ function toggleClearAllButton(){
         updateUVindex(data);// if successful request is the UV index
       }
     })
-    .fail(function (jqXHR, textStatus, errorThrown){ // call this function in the even of an unsuccessful request
-      error(textStatus);
+    .fail(function (){ // call this function in the even of an unsuccessful request
+      error();
     });
   }
 
@@ -120,6 +128,7 @@ function toggleClearAllButton(){
     $("#search-bar").popover({container:'body', trigger:'focus',toggle:"popover", placement:"top", content:"Whoops!, something went wrong. Try again aaaand possibly check the spelling?"});
     $("#search-bar").popover('show');
   }
+
 
   // is called upon when a successfull ajax response of dataType "currentWeather" occurs
   function updateCurrentWeather(AJAXresponse){
@@ -283,10 +292,7 @@ function toggleClearAllButton(){
     ajaxRequest(UVindexEndpoint,dataType);
   }
 
-  // enables Bootstrap tool-tips
-  $(function(){
-    $('[data-toggle="tooltip"]').tooltip();
-  });
+
 
   // is called upon when a successfull ajax response of dataType "UVindex" occurs
   function updateUVindex(AJAXresponse){
