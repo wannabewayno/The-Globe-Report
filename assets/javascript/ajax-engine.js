@@ -222,46 +222,53 @@ function toggleClearAllButton(){
   // is called upon when a successfull ajax response of dataType "Forecast" occurs
   function updateForecast(AJAXresponse){
     $('.forecast-card').remove();
-    const UTCoffset = (AJAXresponse.timezone)/60;
-    const usersTime = moment();
-    const citiesTime = usersTime.utcOffset(UTCoffset);
-    const clonedTime = citiesTime.clone();
-    const citiesHour = clonedTime.hour();
-    const hourDifference = 24 - citiesHour;
-    const setHours = 12+hourDifference;
-    const forecastStart = clonedTime.add(setHours,"h");
-    const hourCriteria = forecastStart.hour();
-    const dayCriteria = forecastStart.day();
-    // most of the above code could be simplified, but it was late and moment.js was frustrating me.
-
-    var startingIndex;
-    for (let i = 0; i < AJAXresponse.list.length; i++) {
-      timeCheck = moment(AJAXresponse.list[i].dt_txt);
-      checkHour = timeCheck.hour();
-      checkDay = timeCheck.day();
-      if (checkHour === hourCriteria && checkDay === dayCriteria){
-       startingIndex = i
+    // finds the first noon forecast to be used from the list of returned forecasts
+      // I assume that when a user expects a forecast
+      // that they are looking for the midday forecast, not a 9AM forecast, not an 8PM forecast.
+    const UTCoffset = (AJAXresponse.timezone)/60; //for the given city, finds the UTC timezone offset (in minutes);
+    const usersTime = moment(); // creates a moment in localtime
+    const citiesTime = usersTime.utcOffset(UTCoffset); //translates localtime to given city's localtime
+    const clonedTime = citiesTime.clone(); // clones the cityLocalTime so can manipulate it without changing the original time
+    const citiesHour = clonedTime.hour(); //finds the hour of the city's local time
+    const hourDifference = 24 - citiesHour; // finds how many hours until the new day
+    const setHours = 12+hourDifference; // creates a time offset in hours from the current hour, to 12pm the next day
+    const forecastStart = clonedTime.add(setHours,"h"); // adds this offset in hours to the city's local time. city's localtime should now be 12pm the next day
+    const hourCriteria = forecastStart.hour(); //extracts the hour of this new time (12hr)
+    const dayCriteria = forecastStart.day(); // extratcts the day of the week of this new time.
+    
+    
+    var startingIndex; // assign an index variable to this scope
+    for (let i = 0; i < AJAXresponse.list.length; i++) { //loop through all forecasts
+      timeCheck = moment(AJAXresponse.list[i].dt_txt); // use the forecast date to create a moment
+      checkHour = timeCheck.hour(); // find the hour of the day this forecast
+      checkDay = timeCheck.day(); //finds the day of the week for this forecast
+      if (checkHour === hourCriteria && checkDay === dayCriteria){ //checks that forecast hour and day match he forecast we are looking for
+       startingIndex = i // if it does match (expecting 1 match btw), assign the index of this forecast for later use
       }
     }
     var count = 0;
-    for (let i = startingIndex; i <  AJAXresponse.list.length; i+=8) {
-      const card = forecastCard(AJAXresponse.list[i],UTCoffset);
-      $("#forecast").append(card);
-      count++;
+    for (let i = startingIndex; i <  AJAXresponse.list.length; i+=8) { //starts at the forecast we want, then picks the 8th forecast afterwards (3hr forecasts, 8th forecast (24hr) is the next day's forecast)
+      const card = forecastCard(AJAXresponse.list[i],UTCoffset); //builds a forecast card
+      $("#forecast").append(card); //appends it to our forecast section in index.html
+      count++; // records the amount of forecasts we have extracted with this method
     }
-    $('#forecast-number').text(count+" - Day Forecast")
+    $('#forecast-number').text(count+" - Day Forecast") // let's the user know it is an Nth number of forecasts
    
   }
   // creates all mark up for the dynamic forecast content. and returns the card as a JQuery Object
   function forecastCard(forecastObject){
     const forecastTime = moment(forecastObject.dt_txt);
     const forecastDay = forecastTime.format('ddd, hA');
-    const title = forecastDay; //updates day dynamically 
+    const title = forecastDay; //updates day dynamically
+    const date = forecastTime.format("Do,MMM,YYYY"); 
 
     const card = $('<div>').addClass("forecast-card");
+    const cardHeader = $('<div>').addClass("forecast-header"); 
     const cardTitle = $('<h6>').addClass("forecast-title");
-    cardTitle.text(title)
-
+    const cardDate = $('<p>').addClass("forecast-date");
+    cardDate.text(date);
+    cardTitle.text(title);
+    cardHeader.append(cardTitle,cardDate)
     const conditionSection = $('<div>').addClass("forecast-condition-section")
     const condition = $('<h6>').addClass("forcast-condition");
     condition.text(forecastObject.weather[0].description)
@@ -274,7 +281,7 @@ function toggleClearAllButton(){
 
     conditionSection.append(picture, condition);
     statSection.append(temp,wind,humidity);
-    card.append(cardTitle, conditionSection, statSection);
+    card.append(cardHeader, conditionSection, statSection);
     return card;
   }
 
