@@ -88,9 +88,7 @@ body {
 #icon{
     font-size:30px;
 }
-.label-container{
-    margin:15px 15px 15px -25px;
-}
+
 
 .condition-label{
     border:2px solid rgba(255, 183, 197, 1);
@@ -99,7 +97,13 @@ body {
     padding:20px;
 }
 
+.label-container{
+    margin:15px 15px 15px -25px;
+}
+
 .data-label{
+    display: inline-block;
+    width:108px;
     font-weight: bold;
     padding:5px;
     border-top-left-radius: 5px;
