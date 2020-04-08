@@ -379,7 +379,7 @@ function toggleClearAllButton(){
     // first removes any toggled state already present in the sidebar
   function addButton(cityName){
     toggleActive();
-    cityButton = $('<li>').addClass("active list-group-item d-flex flex-column flex-sm-row justify-content-center justify-content-sm-around align-items-baseline cityButton btn");
+    cityButton = $('<li>').addClass("active list-group-item d-flex justify-content-around align-items-baseline cityButton btn");
     cityText = $('<p>').text(cityName);
     cityText.addClass("cityButton");
     closeButton = $('<i>').addClass("fa fa-window-close");
